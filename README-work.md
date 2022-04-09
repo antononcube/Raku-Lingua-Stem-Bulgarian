@@ -4,7 +4,7 @@
 
 This Raku package is for stemming Bulgarian words. 
 It implements the BulStem algorithm presented in 
-[[PN1](http://lml.bas.bg/~nakov/bulstem/)].)
+[[PN1](http://lml.bas.bg/~nakov/bulstem/)].
 
 -------
 
@@ -24,6 +24,23 @@ say BulStem('Покълването на посевите се очаква с �
 ```
 
 The function `bg-word-stem` can be used as synonym of `BulStem`.
+
+-------
+
+## Command Line Interface (CLI)
+
+The package provides the CLI function `BulStem`:
+
+```shell
+> BulStem Какви
+Какв
+  
+> BulStem "Какви са стъблата на тези думи"
+# ["Какв", "с", "стъблат", "н", "тез", "дум"]
+
+> BulStem Какви са стъблата на тези думи 
+# Какв с стъблат н тез дум
+```
 
 -------
 
