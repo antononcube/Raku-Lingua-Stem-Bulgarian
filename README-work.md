@@ -16,17 +16,11 @@ The `BulStem` function is used to find stems:
 use Lingua::Stem::Bulgarian;
 say BulStem('покълване')
 ```
-```
-# покълв
-```
 
 `BulStem` also works with lists of words:
 
 ```perl6
 say BulStem('Покълването на посевите се очаква с търпение, пиене и сланина.'.split(/\W/))
-```
-```
-# (Покълванет н посеви с очакв с търп  пиен и слани )
 ```
 
 The function `bg-word-stem` can be used as synonym of `BulStem`.

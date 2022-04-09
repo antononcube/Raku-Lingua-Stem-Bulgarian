@@ -1,0 +1,31 @@
+{
+  "name": "Lingua::Stem::Bulgarian",
+  "description": "Package for stemming Bulgarian words. (Implements the BulStem algorithm.)",
+  "version": "0.1.0",
+  "perl": "6.d",
+  "authors": [
+    "Anton Antonov"
+  ],
+  "auth": "github:antononcube",
+  "depends": [],
+  "build-depends": [],
+  "test-depends": [],
+  "provides": {
+    "Lingua::Stem::Bulgarian": "lib/Lingua/Stem/Bulgarian/BulStem.rakumod"
+  },
+  "resources": [
+    "stem_rules_context_1_utf8.txt",
+    "stem_rules_context_2_utf8.txt",
+    "stem_rules_context_3_utf8.txt"
+  ],
+  "license": "Artistic-2.0",
+  "tags": [
+    "stem",
+    "stemming",
+    "stemmer",
+    "Bulgarian",
+    "inflectional stemmer"
+  ],
+  "api": "1",
+  "source-url": "https://github.com/antononcube/Raku-Lingua-Stem-Bulgarian.git"
+}
