@@ -114,10 +114,18 @@ GetTokens ./RecommenderPhrases-template | BulStem --format=raku
 
 ## TODO
 
-- [ ] Respected the word case in the returned result. 
+- [X] DONE Respect the word case in the returned result. 
 
    - `BulStem('ТАБЛА')` should return `'ТАБЛ'`. 
    - (Not `'табл'` as it currently does.) 
+   
+- [X] DONE CLI that can be inserted in UNIX pipelines.
+
+- [X] DONE (Re-)ingestion of stem rules with different min counts.
+
+- [ ] TODO Performance statistics.
+
+- [ ] TODO More detailed documentation.
 
 -------
 
