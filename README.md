@@ -1,4 +1,4 @@
-# Raku-Lingua-Stem-Bulgarian
+   # Raku-Lingua-Stem-Bulgarian
 
 ## Introduction
 
@@ -23,10 +23,10 @@ say BulStem('покълване')
 `BulStem` also works with lists of words:
 
 ```perl6
-say BulStem('Покълването на посевите се очаква с търпение, пиене и сланина.'.split(/\W/))
+say BulStem('Покълването на посевите се очаква с търпение, пиене и сланина.'.words)
 ```
 ```
-# (Покълванет н посеви с очакв с търп  пиен и слани )
+# (Покълванет н посеви с очакв с търпени пиен и слани)
 ```
 
 The function `bg-word-stem` can be used as synonym of `BulStem`.

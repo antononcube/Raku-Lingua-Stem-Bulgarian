@@ -10,7 +10,7 @@ is BulStem('облизал'),
         'Single word check';
 
 # 2
-is BulStem('облизал си тази чиния с царска туршия и домати'.split(/\W+/)),
+is BulStem('облизал си тази чиния с царска туршия и домати'.words),
         <обли с таз чин с царск турш и домат>,
         'List of words';
 
@@ -20,7 +20,7 @@ my $text =
 През последните дни стойностите на синьото гориво на нидерландската борса от която зависят цените у нас, се повишиха с около 70%.
 Днес се поуспокоиха, но е под въпрос дали заявеното от "Булгаргаз" поевтиняване за началото на март ще се случи.';
 
-isa-ok BulStem($text.split(/\W+/)>>.trim),
+isa-ok BulStem($text.words),
         List,
         'Long text';
 
@@ -32,8 +32,8 @@ is bg-word-stem($word4),
 
 # 5
 my $text5 = 'облизал си тази чиния с царска туршия и домати';
-is bg-word-stem($text5.split(/\W+/)),
-        BulStem($text5.split(/\W+/)),
+is bg-word-stem($text5.words),
+        BulStem($text5.words),
         'Synonym single word check';
 
 

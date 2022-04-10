@@ -20,7 +20,7 @@ say BulStem('покълване')
 `BulStem` also works with lists of words:
 
 ```perl6
-say BulStem('Покълването на посевите се очаква с търпение, пиене и сланина.'.split(/\W/))
+say BulStem('Покълването на посевите се очаква с търпение, пиене и сланина.'.words)
 ```
 
 The function `bg-word-stem` can be used as synonym of `BulStem`.

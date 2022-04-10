@@ -7,7 +7,7 @@ use Lingua::Stem::Bulgarian;
 say BulStem('облизал');
 
 # Many words
-say BulStem('облизал си тази чиния с туршия и домати'.split(/\W+/));
+say BulStem('облизал си тази чиния с туршия и домати'.words);
 
 my $text =
         'На фона на всичко това в завода са притеснени и от ефекта, който кризата ще има върху цените на природния газ, използван в производството.
@@ -15,7 +15,7 @@ my $text =
 Днес се поуспокоиха, но е под въпрос дали заявеното от "Булгаргаз" поевтиняване за началото на март ще се случи.';
 
 my $tstart = now;
-my $res = BulStem($text.split(/\W+/)>>.trim);
+my $res = BulStem($text.words>>.trim);
 say "Stemming time {now - $tstart}.";
 
 say $res.join(' ');
