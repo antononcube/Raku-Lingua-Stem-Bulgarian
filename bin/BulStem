@@ -3,17 +3,35 @@ use v6.d;
 
 use Lingua::Stem::Bulgarian;
 
-#| Finds stems of Bulgarian words.
-multi sub MAIN(Str $text,                     #= Text to spilt and its words stemmed.
-               Str :$splitter = '\W+'         #= String to make a split regex with.
-               ) {
-    my @res = BulStem($text.split(/<{ $splitter }>/));
-
-    if @res.elems == 1 { say @res[0]; }
-    else { say @res.raku; }
+multi format-output(Str $format, @output) {
+    given $format.lc {
+        when $_ eq 'raku' && @output.elems == 1 { say @output[0].raku; }
+        when @output.elems == 1                 { say @output[0]; }
+        when $_ (elem) <string text>            { say @output.join(' '); }
+        when $_ (elem) <lines>                  { .say for @output; }
+        default                                 { say @output.raku; }
+    }
 }
 
-multi sub MAIN(*@words                         #= Words to be stemmed
+#| Finds stems of Bulgarian words in text.
+multi sub MAIN(Str $text,                     #= Text to spilt and its words stemmed.
+               Str :$splitter = '\W+',        #= String to make a split regex with.
+               Str :$format= 'text'         #= Output format one of 'text', 'lines', or 'raku'.
                ) {
-    say BulStem(@words).join(' ');
+    my @res = BulStem($text.split(/<{ $splitter }>/));
+    format-output($format, @res);
+}
+
+#| Finds stems of Bulgarian words.
+multi sub MAIN(*@words,                       #= Words to be stemmed.
+               Str :$format= 'text'         #= Output format one of 'text', 'lines', or 'raku'.
+               ) {
+    format-output($format, BulStem(@words))
+}
+
+#| Finds stems of Bulgarian words in (pipeline) input.
+multi sub MAIN(Str :$format= 'text'         #= Output format one of 'text', 'lines', or 'raku'.
+               ) {
+    my @words = lines.join(' ').words;
+    format-output($format, BulStem(@words))
 }
