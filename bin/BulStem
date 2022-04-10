@@ -4,16 +4,16 @@ use v6.d;
 use Lingua::Stem::Bulgarian;
 
 #| Finds stems of Bulgarian words.
-multi sub MAIN(Str $text,            #= Text to spilt and its words stemmed.
-         Str :$split = '\W+'         #= String to make a split regex with.
-         ) {
-    my @res = BulStem($text.split(/<{ $split }>/));
+multi sub MAIN(Str $text,                     #= Text to spilt and its words stemmed.
+               Str :$splitter = '\W+'         #= String to make a split regex with.
+               ) {
+    my @res = BulStem($text.split(/<{ $splitter }>/));
 
     if @res.elems == 1 { say @res[0]; }
-    else               { say @res.raku; }
+    else { say @res.raku; }
 }
 
-multi sub MAIN( *@words,             #= Words to be stemmed
+multi sub MAIN(*@words                         #= Words to be stemmed
                ) {
     say BulStem(@words).join(' ');
 }
