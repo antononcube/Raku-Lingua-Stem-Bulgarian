@@ -22,16 +22,54 @@ unit module Lingua::Stem::Bulgarian;
 #| The Bulgarian stemming rules
 my %bgStemRules;
 
+#| The Bulgarian stemming rules counts
+my %bgStemRuleCounts;
+
+#| Vowels
+my @vowels = <а ъ о у е и я ю>;
+
+#| Current min count
+my UInt $current-min-count = 0;
+
 #| Get Bulgarian stemming rules
-sub get-bulgarian-stem-rules(-->Hash) is export {
-    return %bgStemRules;
+sub get-bulgarian-stem-rules(Bool :$with-counts = False, UInt :$min-count = 0 -->Hash) is export {
+    if $with-counts {
+
+        if %bgStemRuleCounts.elems == 0 || $min-count != $current-min-count {
+            for 1 .. 3 -> $i {
+                %bgStemRuleCounts = %bgStemRuleCounts, ingest-bg-stem-rules-with-counts(%?RESOURCES{'stem_rules_context_' ~ $i ~ '_utf8.txt'});
+            }
+        }
+
+        $current-min-count = $min-count;
+
+        if $min-count ~~ Int {
+            %bgStemRuleCounts = %bgStemRuleCounts.grep({ $_.value ≥ $min-count });
+        }
+
+        return %bgStemRuleCounts;
+    } else {
+        %bgStemRules = get-bulgarian-stem-rules(:with-counts, :$min-count);
+        %bgStemRules = %bgStemRules.map({ $_.key.split(':') }).map({ $_[0] => $_[1] });
+        return %bgStemRules;
+    }
 }
 
 #| Ingest Bulgarian stemming rules
-sub get-bg-stem-rules($fileName --> Hash) {
+sub ingest-bg-stem-rules($fileName --> Hash) {
     my $ruleLines = slurp($fileName).lines;
-    $ruleLines = $ruleLines.map({ $_.subst('==>', '').split(/\W+/).head(2) });
+    $ruleLines = $ruleLines.map({ $_.subst('==>', '').words.head(2) });
     my %rules = $ruleLines.map({ $_[0] => $_[1] });
+    return %rules;
+}
+
+#| Ingest Bulgarian stemming rules with counts
+sub ingest-bg-stem-rules-with-counts( $fileName --> Hash) {
+
+    my $ruleLines = slurp($fileName).lines;
+    $ruleLines = $ruleLines.map({ $_.subst('==>', '').words }).List;
+    my %rules = $ruleLines.map({ $_[0] ~ ':' ~ $_[1] => +$_[2] }).grep({ so $_.value ~~ Int });
+
     return %rules;
 }
 
@@ -39,7 +77,7 @@ sub get-bg-stem-rules($fileName --> Hash) {
 if %bgStemRules.elems == 0 {
     # This ingestion is done at compile time -- see the BEGIN block below.
     for 1 .. 3 -> $i {
-        %bgStemRules = %bgStemRules, get-bg-stem-rules(%?RESOURCES{'stem_rules_context_' ~ $i ~ '_utf8.txt'});
+        %bgStemRules = %bgStemRules, ingest-bg-stem-rules(%?RESOURCES{'stem_rules_context_' ~ $i ~ '_utf8.txt'});
     }
 }
 
@@ -54,7 +92,13 @@ multi BulStem(@words --> List) {
 #| BulStem
 multi BulStem(Str:D $word --> Str) {
 
-    for 0 ..^ ($word.chars - 1) -> $i {
+    my $pos = $word.comb.first({ $_ (elem) @vowels }):k;
+
+    without $pos {
+        return $word;
+    }
+
+    for $pos ..^ ($word.chars - 1) -> $i {
         my $candidate = $word.substr($i, *- 1);
         my $res = %bgStemRules{$candidate.lc};
         with $res {
@@ -73,10 +117,4 @@ sub bg-word-stem($arg) is export {
 ##=========================================================
 ## Optimization
 ##=========================================================
-%bgStemRules = BEGIN {
-    my %res;
-    for 1 .. 3 -> $i {
-        %res = %res, get-bg-stem-rules(%?RESOURCES{'stem_rules_context_' ~ $i ~ '_utf8.txt'});
-    }
-    %res;
-};
+%bgStemRules = BEGIN { $current-min-count = 2; get-bulgarian-stem-rules(:!with-counts, min-count => $current-min-count) };
