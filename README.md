@@ -26,10 +26,10 @@ say BulStem('покълване')
 say BulStem('Покълването на посевите се очаква с търпение, пиене и сланина.'.words)
 ```
 ```
-# (Покълванет н посеви с очакв с търпени пиен и слани)
+# (Покълване на посеви се очакв с търпени пи и слани)
 ```
 
-The function `bg-word-stem` can be used as synonym of `BulStem`.
+The function `bg-word-stem` can be used as a synonym of `BulStem`.
 
 -------
 
@@ -91,8 +91,8 @@ GetTokens ./RecommenderPhrases-template | BulStem --format=raku
 
 [C#](https://github.com/tbmihailov/bulstem-cs),
 [GATE plugin (Java)](https://gate.ac.uk/gate/plugins/Lang_Bulgarian/src/gate/bulstem/BulStemPR.java)
-[Java (JDK 1.4)](http://people.ischool.berkeley.edu/~nakov/bulstem/Stemmer.java),
-[Perl (Original)](http://people.ischool.berkeley.edu/~nakov/bulstem/apply_stem.pl),
+[Java (JDK 1.4)](http://lml.bas.bg/~nakov/bulstem/Stemmer.java),
+[Perl (Original)](http://lml.bas.bg/~nakov/bulstem/apply_stem.pl),
 [Python2](https://github.com/peio/PyBulStem),
 [Python3](https://github.com/mhardalov/bulstem-py),
 [Ruby](https://github.com/tbmihailov/bulstem)
@@ -104,10 +104,17 @@ GetTokens ./RecommenderPhrases-template | BulStem --format=raku
 
 - The resource files are essential for the implementation of `BulStem`.
 
+   - I had problems ingesting the stem-rules files in [PNp1] with my OS/IDE setup, 
+     so I used the files in [MHp1].
+
 - The resource files are used to make the Bulgarian stemming rules.
 
 - The stemming rules `Hash` object is made at compile time.
 
+- There are 120765 stemming rules with frequencies (counts) ≥ 1. 
+   
+   - By default rules with count ≥ 2 are loaded used.
+   
 
 -------
 
@@ -139,3 +146,13 @@ In Workshop on Balkan Language Resources and Tools (Balkan Conference in Informa
 [DSL::Bulgarian Raku package](https://github.com/antononcube/Raku-DSL-Bulgarian),
 (2022),
 [GitHub/antononcube](https://github.com/antononcube).
+
+[MHp1] Momchil Hardalov,
+[bulstem-py Python package](https://github.com/mhardalov/bulstem-py),
+(2020), (Release: v0.3.3),
+[GitHub/mhardalov](https://github.com/mhardalov).
+
+[PNp1] Preslav Nakov,
+[BulStem: Inflectional Stemmer for Bulgarian](http://lml.bas.bg/~nakov/bulstem/index.html),
+(2002),
+http://lml.bas.bg/~nakov.
