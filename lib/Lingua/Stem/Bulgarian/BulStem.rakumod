@@ -92,17 +92,18 @@ multi BulStem(@words --> List) {
 #| BulStem
 multi BulStem(Str:D $word --> Str) {
 
-    my $pos = $word.comb.first({ $_ (elem) @vowels }):k;
+    my $word2 = $word.lc;
+    my $pos = $word2.comb.first({ $_ (elem) @vowels }):k;
 
     without $pos {
         return $word;
     }
 
-    for $pos ..^ ($word.chars - 1) -> $i {
-        my $candidate = $word.substr($i, *- 1);
+    for $pos ..^ ($word2.chars - 1) -> $i {
+        my $candidate = $word2.substr($i, *- 1);
         my $res = %bgStemRules{$candidate.lc};
         with $res {
-            return $word.substr(0, $i) ~ $res;
+            return $word.substr(0, $i + $res.chars);
         }
     }
 
