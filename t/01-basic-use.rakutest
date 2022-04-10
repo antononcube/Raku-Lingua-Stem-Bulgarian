@@ -1,4 +1,8 @@
 use v6.d;
+
+use lib '.';
+use lib './lib';
+
 use Lingua::Stem::Bulgarian;
 use Test;
 
@@ -11,7 +15,7 @@ is BulStem('облизал'),
 
 # 2
 is BulStem('облизал си тази чиния с царска туршия и домати'.words),
-        <обли с таз чин с царск турш и домат>,
+        <обли си таз чини с царск турш и домат>,
         'List of words';
 
 # 3
