@@ -29,18 +29,55 @@ The function `bg-word-stem` can be used as synonym of `BulStem`.
 
 ## Command Line Interface (CLI)
 
-The package provides the CLI function `BulStem`:
+The package provides the CLI function `BulStem`. Here is its usage message:
+
+```shell
+> BulStem --help                                                   
+Usage:
+  BulStem [--splitter=<Str>] [--format=<Str>] <text> -- Finds stems of Bulgarian words in text.
+  BulStem [--format=<Str>] [<words> ...] -- Finds stems of Bulgarian words.
+  BulStem [--format=<Str>] -- Finds stems of Bulgarian words in (pipeline) input.
+  
+    <text>              Text to spilt and its words stemmed.
+    --splitter=<Str>    String to make a split regex with. [default: '\W+']
+    --format=<Str>      Output format one of 'text', 'lines', or 'raku'. [default: 'text']
+    [<words> ...]       Words to be stemmed.
+```
+
+Here are example shell commands of using the CLI function `BulStem`:
 
 ```shell
 > BulStem Какви
 Какв
   
-> BulStem "Какви са стъблата на тези думи"
+> BulStem --format=raku "Какви са стъблата на тези думи"
 # ["Какв", "с", "стъблат", "н", "тез", "дум"]
 
 > BulStem Какви са стъблата на тези думи 
 # Какв с стъблат н тез дум
 ```
+
+Here is a pipeline example using the CLI function `GetTokens` of the package 
+["Grammar::TokenProcessing"](https://github.com/antononcube/Raku-Grammar-TokenProcessing),
+[AAp1]:
+
+```shell
+GetTokens ./RecommenderPhrases-template | BulStem --format=raku
+# ("colnames", "rownames", "агрегац", "агрегир", "ан", "аномал", "аномал", "близос", 
+# "взем", "внуш", "глобал", "глобалн", "гъстот", "докаж", "доказателств", "доказателств",
+# "елемент", "етик", "заред", "изполва", "индексира", "истор", "консума", "латент", 
+# "латентн", "локал", "локалн", "матриц", "матриц", "напречн", "нещ", "нещ", 
+# "номализац", "нормализато", "нормализира", "обед", "обедин", "обработ", "обрат", 
+# "обратн", "обясн", "обясн", "обясн", "повечет", "подход", "подход", "пр", "пр", 
+# "препор", "препор", "препоръч", "препоръч", "препоръча", "препоръч", "препоръч", 
+# "препоръчителк", "препоръчк", "препоръчк", "при", "проф", "размер", "разреденос", 
+# "редиц", "свидетелств", "свидетелств", "свойств", "свойств", "семантич", "съсед", 
+# "терм", "функци", "характеристи", "характеристи", "честот", "чре")
+```
+
+**Remark:** These kind of tokens (literals) transformations are used in the package 
+["DSL::Bulgarian"](https://github.com/antononcube/Raku-DSL-Bulgarian),
+[AAp2].
 
 -------
 
@@ -79,6 +116,20 @@ The package provides the CLI function `BulStem`:
 
 ## References
 
+### Articles
+
 [PN1] Preslav Nakov, 
 ["BulStem: Design and evaluation of inflectional stemmer for Bulgarian"](http://lml.bas.bg/~nakov/bulstem/index.html), 
 In Workshop on Balkan Language Resources and Tools (Balkan Conference in Informatics).
+
+### Packages
+
+[AAp1] Anton Antonov,
+[Grammar::TokenProcessing Raku package](https://github.com/antononcube/Raku-Grammar-TokenProcessing),
+(2022),
+[GitHub/antononcube](https://github.com/antononcube).
+
+[AAp2] Anton Antonov,
+[DSL::Bulgarian Raku package](https://github.com/antononcube/Raku-DSL-Bulgarian),
+(2022),
+[GitHub/antononcube](https://github.com/antononcube).
