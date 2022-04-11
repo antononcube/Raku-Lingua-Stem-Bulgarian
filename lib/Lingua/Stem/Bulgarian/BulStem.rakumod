@@ -32,12 +32,19 @@ my @vowels = <а ъ о у е и я ю>;
 my UInt $current-min-count = 0;
 
 #| Get Bulgarian stemming rules
-sub get-bulgarian-stem-rules(Bool :$with-counts = False, UInt :$min-count = 0 -->Hash) is export {
+sub get-bulgarian-stem-rules( :$file = Whatever, Bool :$with-counts = False, UInt :$min-count = 0 -->Hash) is export {
     if $with-counts {
 
         if %bgStemRuleCounts.elems == 0 || $min-count != $current-min-count {
-            for 1 .. 3 -> $i {
-                %bgStemRuleCounts = %bgStemRuleCounts, ingest-bg-stem-rules-with-counts(%?RESOURCES{'stem_rules_context_' ~ $i ~ '_utf8.txt'});
+            if $file.isa(Whatever) {
+                for 1 .. 3 -> $i {
+                    %bgStemRuleCounts = %bgStemRuleCounts, ingest-bg-stem-rules-with-counts(%?RESOURCES{'stem_rules_context_' ~ $i ~ '_utf8.txt'});
+                }
+            } elsif ($file ~~ Str && $file.Int ~~ Int || $file ~~ Int) && 1 <= $file.Int <= 3 {
+                %bgStemRuleCounts = ingest-bg-stem-rules-with-counts(%?RESOURCES{'stem_rules_context_' ~ $file ~ '_utf8.txt'});
+            } else {
+                warn "Do not know what to do with the value given to the named argument 'file': {$file}.";
+                return %bgStemRuleCounts;
             }
         }
 
@@ -126,4 +133,7 @@ sub bg-word-stem($arg) is export {
 ##=========================================================
 ## Optimization
 ##=========================================================
-%bgStemRules = BEGIN { $current-min-count = 2; get-bulgarian-stem-rules(:!with-counts, min-count => $current-min-count) };
+%bgStemRules = BEGIN {
+    $current-min-count = 2;
+    get-bulgarian-stem-rules(:!with-counts, file => Whatever, min-count => $current-min-count)
+};
