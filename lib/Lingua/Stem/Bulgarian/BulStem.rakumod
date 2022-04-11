@@ -92,6 +92,35 @@ multi BulStem(@words --> List) {
 #| BulStem
 multi BulStem(Str:D $word --> Str) {
 
+    # The code in this function is very close to the original Perl code by Preslav Nakov.
+
+    # 1. Find the word length
+    my $wordLen = $word.chars;
+
+    # 2. Return if no vowels are found
+    $word.match( / ([<-[аъоуеияю]>*]) <[аъоуеияю]> / ):i;
+
+    without $/ {
+        return $word;
+    }
+
+    # 3. Try to match against the rules
+    loop ( my $start = 1 + $0.chars; $start < $wordLen; $start++ ) {
+        my $suffix = $word.substr($start);
+        my $res = %bgStemRules{$suffix};
+        with $res {
+            # return $word.substr(0, $start) ~ $res;
+            return $word.substr(0, $start) ~ $word.substr($start, $res.chars);
+        }
+    }
+
+    # 4. No compatible rule - return
+    return $word;
+}
+
+#| BulStem
+multi BulStemFirst(Str:D $word --> Str) {
+
     my $word2 = $word.lc;
     my $pos = $word2.comb.first({ $_ (elem) @vowels }):k;
 
