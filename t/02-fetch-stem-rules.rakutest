@@ -1,0 +1,25 @@
+use v6.d;
+
+use lib '.';
+use lib './lib';
+
+use Lingua::Stem::Bulgarian;
+use Test;
+
+plan 3;
+
+my $text = 'облизал си тази чиния с царска туршия и домати';
+
+# 1
+ok get-bulgarian-stem-rules(file-spec => 2, min-count => 0),
+        'Load file 2 with min counts 0';
+
+# 2
+lives-ok { get-bulgarian-stem-rules(file-spec => 4, min-count => 0).WHAT },
+        'Load file 4 with min counts';
+
+# 3
+ok get-bulgarian-stem-rules(file-spec => Whatever, min-count => 1),
+        'Load file Whatever with min counts 1';
+
+done-testing;
