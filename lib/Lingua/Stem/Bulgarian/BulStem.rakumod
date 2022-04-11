@@ -139,6 +139,6 @@ sub bg-word-stem($arg) is export {
 ##=========================================================
 %bgStemRules = BEGIN {
     $current-min-count = 2;
-    $current-file-spec = Whatever.raku;
-    get-bulgarian-stem-rules(:!with-counts, file-spec => Whatever, min-count => $current-min-count)
+    $current-file-spec = 2.raku;
+    get-bulgarian-stem-rules(:!with-counts, file-spec => 2, min-count => $current-min-count)
 };
