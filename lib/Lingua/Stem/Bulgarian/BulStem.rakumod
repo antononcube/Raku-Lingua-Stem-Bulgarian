@@ -31,24 +31,28 @@ my @vowels = <а ъ о у е и я ю>;
 #| Current min count
 my UInt $current-min-count = 0;
 
+#| Current file spec
+my $current-file-spec = Whatever.raku;
+
 #| Get Bulgarian stemming rules
-sub get-bulgarian-stem-rules( :$file = Whatever, Bool :$with-counts = False, UInt :$min-count = 0 -->Hash) is export {
+sub get-bulgarian-stem-rules( :$file-spec = Whatever, Bool :$with-counts = False, UInt :$min-count = 0 -->Hash) is export {
     if $with-counts {
 
-        if %bgStemRuleCounts.elems == 0 || $min-count != $current-min-count {
-            if $file.isa(Whatever) {
+        if %bgStemRuleCounts.elems == 0 || $min-count != $current-min-count || $file-spec.raku ne $current-file-spec {
+            if $file-spec.isa(Whatever) {
                 for 1 .. 3 -> $i {
                     %bgStemRuleCounts = %bgStemRuleCounts, ingest-bg-stem-rules-with-counts(%?RESOURCES{'stem_rules_context_' ~ $i ~ '_utf8.txt'});
                 }
-            } elsif ($file ~~ Str && $file.Int ~~ Int || $file ~~ Int) && 1 <= $file.Int <= 3 {
-                %bgStemRuleCounts = ingest-bg-stem-rules-with-counts(%?RESOURCES{'stem_rules_context_' ~ $file ~ '_utf8.txt'});
+            } elsif ($file-spec ~~ Str && $file-spec.Int ~~ Int || $file-spec ~~ Int) && 1 <= $file-spec.Int <= 3 {
+                %bgStemRuleCounts = ingest-bg-stem-rules-with-counts(%?RESOURCES{'stem_rules_context_' ~ $file-spec ~ '_utf8.txt'});
             } else {
-                warn "Do not know what to do with the value given to the named argument 'file': {$file}.";
+                warn "Do not know what to do with the value given to the named argument 'file-spec': {$file-spec}.";
                 return %bgStemRuleCounts;
             }
         }
 
         $current-min-count = $min-count;
+        $current-file-spec = $file-spec.raku;
 
         if $min-count ~~ Int {
             %bgStemRuleCounts = %bgStemRuleCounts.grep({ $_.value ≥ $min-count });
@@ -56,7 +60,7 @@ sub get-bulgarian-stem-rules( :$file = Whatever, Bool :$with-counts = False, UIn
 
         return %bgStemRuleCounts;
     } else {
-        %bgStemRules = get-bulgarian-stem-rules(:with-counts, :$min-count);
+        %bgStemRules = get-bulgarian-stem-rules(:with-counts, :$file-spec, :$min-count);
         %bgStemRules = %bgStemRules.map({ $_.key.split(':') }).map({ $_[0] => $_[1] });
         return %bgStemRules;
     }
@@ -105,15 +109,15 @@ multi BulStem(Str:D $word --> Str) {
     my $wordLen = $word.chars;
 
     # 2. Return if no vowels are found
-    $word.match( / ([<-[аъоуеияю]>*]) <[аъоуеияю]> / ):i;
+    $word.match( /:i ([<-[аъоуеияю]>*]) <[аъоуеияю]> / );
 
     without $/ {
         return $word;
     }
-
+say $/;
     # 3. Try to match against the rules
     loop ( my $start = 1 + $0.chars; $start < $wordLen; $start++ ) {
-        my $suffix = $word.substr($start);
+        my $suffix = $word.substr($start).lc;
         my $res = %bgStemRules{$suffix};
         with $res {
             # return $word.substr(0, $start) ~ $res;
@@ -135,5 +139,6 @@ sub bg-word-stem($arg) is export {
 ##=========================================================
 %bgStemRules = BEGIN {
     $current-min-count = 2;
-    get-bulgarian-stem-rules(:!with-counts, file => Whatever, min-count => $current-min-count)
+    $current-file-spec = Whatever.raku;
+    get-bulgarian-stem-rules(:!with-counts, file-spec => Whatever, min-count => $current-min-count)
 };
