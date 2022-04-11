@@ -6,7 +6,7 @@ use lib './lib';
 use Lingua::Stem::Bulgarian;
 use Test;
 
-plan 5;
+plan 6;
 
 # 1
 is BulStem('облизал'),
@@ -15,7 +15,7 @@ is BulStem('облизал'),
 
 # 2
 is BulStem('облизал си тази чиния с царска туршия и домати'.words),
-        <обли си тази чин с царск турши и домат>,
+        <обли си тази чини с царск турши и домат>,
         'List of words';
 
 # 3
@@ -40,5 +40,10 @@ is bg-word-stem($text5.words),
         BulStem($text5.words),
         'Synonym single word check';
 
+# 6
+my @words6 = <ТАБЛИТЕ арбаДЖиЙка>;
+is BulStem(@words6),
+        <ТАБЛ арбаДЖиЙк>,
+        'Preserving case';
 
 done-testing;
