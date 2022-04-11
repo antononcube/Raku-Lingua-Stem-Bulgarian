@@ -114,7 +114,7 @@ multi BulStem(Str:D $word --> Str) {
     without $/ {
         return $word;
     }
-say $/;
+
     # 3. Try to match against the rules
     loop ( my $start = 1 + $0.chars; $start < $wordLen; $start++ ) {
         my $suffix = $word.substr($start).lc;
